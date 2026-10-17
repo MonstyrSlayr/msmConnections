@@ -253,6 +253,16 @@ label
     scale: 1;
 }
 
+footer
+{
+    padding: 1em;
+}
+
+footer > p
+{
+    text-align: left;
+}
+
 .gone
 {
     display: none !important;
