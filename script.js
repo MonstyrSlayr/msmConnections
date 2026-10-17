@@ -185,7 +185,7 @@ class TimeLimitConditional extends Conditional // t
 
     constructor(timeLimit)
     {
-        super(function (monster = Monster) { return monster.timeLimit == timeLimit; }, "This monster's inventory has a time limit of " + timeLimit + " DAYS.", "t" + timeLimit, "Time limit of " + timeLimit + " DAYS", "Time limit other than " + timeLimit + " DAYS, or no time limit")
+        super(function (monster = Monster) { return monster.timeLimit == timeLimit; }, "This monster's inventory has a time limit of " + timeLimit + " DAYS.", "t" + timeLimit, "Inventory time limit of " + timeLimit + " DAYS", "Time limit other than " + timeLimit + " DAYS, or no time limit")
         this.timeLimit = timeLimit;
     }
 }

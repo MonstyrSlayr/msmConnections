@@ -9,22 +9,31 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
+
+    <meta name="description" content="Create four groups of four monsters! (It's harder than you think)">
+    <meta name="keywords" content="MSM, My Singing Monsters, Connections, NYT Connections">
+    <meta name="author" content="MonstyrSlayr">
+
+    <meta property="og:url" content="https://monstyrslayr.github.io/msmConnections"/>
+    <meta property="og:title" content="MSM Connections"/>
+    <meta property="og:description" content="Create four groups of four monsters! (It's harder than you think)"/>
+    <meta property="og:image" content="https://raw.githubusercontent.com/MonstyrSlayr/monstyrslayr.github.io/main/img/MSMConnections.png"/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:locale" content="en_US"/>
+
+    <meta property="twitter:url" content="https://monstyrslayr.github.io/msmConnections">
+    <meta property="twitter:title" content="MSM Connections">
+    <meta property="twitter:card" content="summary_large_image">
+    <meta property="twitter:description" content="Create four groups of four monsters! (It's harder than you think)"/>
+    <meta property="twitter:image" content="https://raw.githubusercontent.com/MonstyrSlayr/monstyrslayr.github.io/main/img/MSMConnections.png"/>
     
     <title>MSM Connections</title>
 </head>
 <body>
     <div id="flow">
-        <p>Create four groups of four!</p>
+        <h1>MSM Connections</h1>
 
-        <div id="monsterRects"></div>
-
-        <div id="mistakes"></div>
-
-        <div id="awesomeButtons">
-            <!-- shuffle -->
-            <!-- deselect -->
-            <!-- submit -->
-        </div>
+        <h2>Create four groups of four!</h2>
 
         <p>
             Disclaimer! <br>
@@ -35,6 +44,19 @@
             Tile Size <br>
             Eggs Having a Shared Inventory
         </p>
+
+        <div id="monsterRects"></div>
+        
+        <h2 id="loading">We're loading your puzzle! Please wait...</h2>
+        <h2 id="success" class="gone">Nice work!</h2>
+
+        <div id="mistakes"></div>
+
+        <div id="awesomeButtons">
+            <button id="shuffleButton">Shuffle</button>
+            <button id="deselectButton">Deselect All</button>
+            <button id="submitButton">Submit</button>
+        </div>
     </div>
     <script type="module" src="./main.js"></script>
 </body>

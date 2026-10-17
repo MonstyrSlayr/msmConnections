@@ -4,8 +4,8 @@ import { allConditionals, countMonstersInConditionals, getConditionalsForMonster
 
 // FIX: minor inflatterer on lux lumens, epic wubbox release years
 
-const GROUPS = 4;
-const MONSTERS_IN_GROUP = 4;
+export const GROUPS = 4;
+export const MONSTERS_IN_GROUP = 4;
 const SPECIFICITY_CURVE = (x) => { return x * x * x };
 
 class ConditionalWrapper
@@ -22,6 +22,19 @@ class ConditionalWrapper
     }
 }
 
+class MonsterWrapper
+{
+    monster;
+    isSelected;
+    daConditional;
+}
+
+class ConnectionConditionalWrapper
+{
+    conditional;
+    isSubmitted;
+}
+
 class ConnectionsGame
 {
     daMonsters;
@@ -30,8 +43,27 @@ class ConnectionsGame
 
     constructor(daConditionals, daMonsters)
     {
-        this.daConditionals = daConditionals;
-        this.daMonsters = daMonsters;
+        this.daConditionals = [];
+
+        for (const cond of daConditionals)
+        {
+            const mehWrapper = new ConnectionConditionalWrapper();
+            mehWrapper.conditional = cond;
+            mehWrapper.isSubmitted = false;
+            this.daConditionals.push(mehWrapper);
+        }
+
+        this.daMonsters = [];
+
+        for (const mon of daMonsters)
+        {
+            const mehWrapper = new MonsterWrapper();
+            mehWrapper.monster = mon;
+            mehWrapper.isSelected = false;
+            mehWrapper.daConditional = daConditionals.find(con => con.condition(mon));
+            this.daMonsters.push(mehWrapper);
+        }
+
         this.classDiversityScore = this.calculateClassDiversityScore();
     }
 
@@ -40,7 +72,7 @@ class ConnectionsGame
         const TYPE = 2;
         const monsterClasses = {};
 
-        for (const mon of this.daMonsters)
+        for (const mon of this.daMonsters.map(wrapper => wrapper.monster))
         {
             const monClass = mon.class;
 
@@ -91,7 +123,7 @@ class ConnectionsGame
         {
             for (let i = 0; i < GROUPS; i++)
             {
-                const subMonsters = this.daMonsters.slice(i * GROUPS, (i + 1) * GROUPS);
+                const subMonsters = this.daMonsters.map(wrapper => wrapper.monster).slice(i * GROUPS, (i + 1) * GROUPS);
                 if (subMonsters.every(mon => mon.class == subMonsters[0].class))
                 {
                     curScore -= 1/GROUPS;

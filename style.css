@@ -3,9 +3,31 @@
     transition: all 0.15s;
 }
 
+#flow
+{
+    padding: 1em;
+}
+
+h1
+{
+    font-size: 36px;
+}
+
+h2
+{
+    font-size: 30px;
+}
+
 p
 {
     text-align: center;
+    font-size: 14px;
+}
+
+label
+{
+    text-align: center;
+    font-size: 14px;
 }
 
 #flow
@@ -23,6 +45,64 @@ p
     width: 45em;
     max-width: 95%;
     gap: 1em;
+}
+
+.groupRect
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    background-color: white;
+    border-radius: 0.5em;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+    aspect-ratio: 64 / 9;
+    width: 100%;
+    grid-column: span 4;
+    height: auto;
+    margin: auto;
+    padding: 0.5em;
+    animation: poppy 0.3s;
+}
+
+@keyframes poppy
+{
+    0%
+    {
+        scale: 1;
+        animation-timing-function: ease-out;
+    }
+
+    50%
+    {
+        scale: 1.1;
+        animation-timing-function: ease-in;
+    }
+
+    100%
+    {
+        scale: 1;
+    }
+}
+
+.groupRect > .monBalcony
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.groupRect > .monBalcony > img
+{
+    width: auto;
+    pointer-events: none;
+}
+
+.groupRect > h2
+{
+    text-align: center;
 }
 
 .monsterRect
@@ -53,12 +133,6 @@ p
     scale: 1.03;
 }
 
-.monsterRect > input
-{
-    display: none;
-    pointer-events: none;
-}
-
 .monsterRect > img
 {
     width: auto;
@@ -75,4 +149,147 @@ p
 .monsterRect.selected > label
 {
     color: white;
+}
+
+.jumpy
+{
+    animation: jumpy 0.2s;
+}
+
+.wrongy
+{
+    animation: wrongy 0.2s;
+}
+
+@keyframes wrongy
+{
+    0%
+    {
+        translate: 0 0;
+        animation-timing-function: ease-in;
+    }
+
+    20%
+    {
+        translate: 0.7em 0;
+    }
+
+    40%
+    {
+        translate: -0.9em 0;
+    }
+
+    60%
+    {
+        translate: 1em 0;
+    }
+
+    80%
+    {
+        translate: -0.9em 0;
+        animation-timing-function: ease-out;
+    }
+
+    100%
+    {
+        translate: 0 0;
+    }
+}
+
+@keyframes jumpy
+{
+    0%
+    {
+        translate: 0 0;
+        animation-timing-function: ease-out;
+    }
+
+    50%
+    {
+        translate: 0 -2em;
+        animation-timing-function: ease-in;
+    }
+
+    100%
+    {
+        translate: 0 0;
+    }
+}
+
+#awesomeButtons
+{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5em;
+    margin: 1em;
+    flex-wrap: wrap;
+}
+
+#awesomeButtons > button
+{
+    padding: 1em;
+    font-size: x-large;
+    background: white;
+    border: 2px solid black;
+    border-radius: 1em;
+}
+
+#awesomeButtons > button.disabled
+{
+    opacity: 0.25;
+}
+
+#awesomeButtons > button:not(.disabled):hover
+{
+    cursor: pointer;
+    scale: 1.03;
+}
+
+#awesomeButtons > button.disabled:hover
+{
+    cursor: not-allowed;
+    scale: 1;
+}
+
+.gone
+{
+    display: none !important;
+}
+
+@media screen and (max-width: 750px)
+{
+    .monsterRect > img, .groupRect > .monBalcony > img
+    {
+        width: 4em;
+    }
+}
+
+@media screen and (max-width: 500px)
+{
+    h2
+    {
+        font-size: 24px;
+    }
+
+    p
+    {
+        font-size: 12px;
+    }
+
+    label
+    {
+        font-size: 10px;
+    }
+
+    .monsterRect
+    {
+        padding: 0.25em;
+    }
+
+    .monsterRect > img, .groupRect > .monBalcony > img
+    {
+        width: 3em;
+    }
 }
