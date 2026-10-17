@@ -1,0 +1,78 @@
+*
+{
+    transition: all 0.15s;
+}
+
+p
+{
+    text-align: center;
+}
+
+#flow
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#monsterRects
+{
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    width: 45em;
+    max-width: 95%;
+    gap: 1em;
+}
+
+.monsterRect
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: fit-content;
+    background-color: white;
+    border-radius: 0.5em;
+    filter: drop-shadow(0 0 4px rgba(0, 0, 0, 0.5));
+    aspect-ratio: 16 / 9;
+    width: 90%;
+    height: auto;
+    margin: auto;
+    padding: 0.5em;
+}
+
+.monsterRect.selected
+{
+    background-color: black;
+}
+
+.monsterRect:hover
+{
+    cursor: pointer;
+    scale: 1.03;
+}
+
+.monsterRect > input
+{
+    display: none;
+    pointer-events: none;
+}
+
+.monsterRect > img
+{
+    width: auto;
+    pointer-events: none;
+}
+
+.monsterRect > label
+{
+    text-align: center;
+    color: black;
+    pointer-events: none;
+}
+
+.monsterRect.selected > label
+{
+    color: white;
+}
