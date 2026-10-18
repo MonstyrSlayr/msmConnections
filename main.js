@@ -31,19 +31,23 @@ function loadNewGame()
     connectionColors = shuffle(connectionColors);
     daGame = null;
 
-    while (daGame == null || daGame.classDiversityScore < 1)
+    setTimeout(() =>
     {
-        daGame = createConnections(false);
-    }
+        while (daGame == null || daGame.classDiversityScore < 1)
+        {
+            daGame = createConnections(false);
+        }
 
-    document.getElementById("loading").classList.add("gone");
+        document.getElementById("loading").classList.add("gone");
 
-    for (const mon of shuffle([...daGame.daMonsters]))
-    // for (const mon of daGame.daMonsters)
-    {
-        const myRect = makeMonsterRect(mon);
-        monsterRectsDiv.appendChild(myRect);
-    }
+        for (const mon of shuffle([...daGame.daMonsters]))
+        // for (const mon of daGame.daMonsters)
+        {
+            const myRect = makeMonsterRect(mon);
+            monsterRectsDiv.appendChild(myRect);
+        }
+    }, 500);
+    
 }
 
 loadNewGame();

@@ -6,7 +6,7 @@ import { allConditionals, countMonstersInConditionals, getConditionalsForMonster
 
 export const GROUPS = 4;
 export const MONSTERS_IN_GROUP = 4;
-const SPECIFICITY_CURVE = (x) => { return x * x * x };
+const SPECIFICITY_CURVE = (x) => { return x };
 
 class ConditionalWrapper
 {
@@ -203,9 +203,18 @@ export function createConnections(debug = false)
         // choose conditionals based on quadrants of specificity
         // const thingyMin = SPECIFICITY_CURVE(i / GROUPS) * allConditionalWrappers.length;
         const thingyMin = 0;
-        const thingyMax = (SPECIFICITY_CURVE((i + 1) / GROUPS) * allConditionalWrappers.length) - 1;
-        const thingy = Math.max(Math.floor(Math.random() * (thingyMax - thingyMin) + thingyMin), 0);
+        const thingyMax = (SPECIFICITY_CURVE((i + 1) / GROUPS) * (allConditionalWrappers.length - 1));
+        const thingy = Math.floor(Math.random() * (thingyMax - thingyMin) + thingyMin);
         const myWrapper = allConditionalWrappers[thingy];
+
+        // initial curve study
+        // if (i == 0)
+        // {
+        //     console.log("--------------------------------")
+        //     console.log("thingyMax: " + thingyMax);
+        //     console.log("thingy: " + thingy);
+        //     console.log(myWrapper.conditional.label);
+        // }
 
         connectionsGroups.push(myWrapper.conditional);
         if (debug) console.log(myWrapper.conditional.label + " -----------------------");
@@ -256,7 +265,8 @@ export function createConnections(debug = false)
             jonsters = jonsters.filter(mon => mon != daJonster);
         }
 
-        allConditionalWrappers = allConditionalWrappers.filter(wrap => wrap != myWrapper);
+        // get rid of all conditionals with similar id
+        allConditionalWrappers = allConditionalWrappers.filter(wrap => wrap.conditional.id[0] != myWrapper.conditional.id[0]);
         const ogLength = jonsters.length;
         jonsters = jonsters.filter(mon => !myWrapper.conditional.condition(mon));
         if (debug) console.log("removed " + (ogLength - jonsters.length) + " monsters from " + myWrapper.conditional.label);
