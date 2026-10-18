@@ -263,6 +263,8 @@ export function createConnections(debug = false)
             }
 
             jonsters = jonsters.filter(mon => mon != daJonster);
+            // remove all conditionals that the monster falls under
+            allConditionalWrappers = allConditionalWrappers.filter(wrap => !myConditionals.includes(wrap.conditional));
         }
 
         // get rid of all conditionals with similar id
