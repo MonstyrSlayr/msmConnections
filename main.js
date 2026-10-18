@@ -9,26 +9,44 @@ const monsterRectsDiv = document.getElementById("monsterRects");
 const submitButton = document.getElementById("submitButton");
 const deselectButton = document.getElementById("deselectButton");
 const shuffleButton = document.getElementById("shuffleButton");
+const restartButton = document.getElementById("restartButton");
 
-const connectionColors = ["#f9df6d", "#a0c35a", "#b0c4ef", "#ba81c5"];
+const mistakesCounter = document.getElementById("mistakesCounter");
+
+let connectionColors = ["#f9df6d", "#a0c35a", "#b0c4ef", "#ba81c5"];
 
 function loadNewGame()
 {
     monsterRectsDiv.innerHTML = "";
     submitButton.classList.add("disabled");
     deselectButton.classList.add("disabled");
+    restartButton.classList.add("disabled");
 
-    let daGame = null;
+    document.getElementById("success").classList.add("gone");
+    document.getElementById("loading").classList.remove("gone");
+
+    mistakes = 0;
+    mistakesCounter.textContent = mistakes;
+
+    connectionColors = shuffle(connectionColors);
+    daGame = null;
 
     while (daGame == null || daGame.classDiversityScore < 1)
     {
         daGame = createConnections(false);
     }
 
-    return daGame;
+    document.getElementById("loading").classList.add("gone");
+
+    for (const mon of shuffle([...daGame.daMonsters]))
+    // for (const mon of daGame.daMonsters)
+    {
+        const myRect = makeMonsterRect(mon);
+        monsterRectsDiv.appendChild(myRect);
+    }
 }
 
-daGame = loadNewGame();
+loadNewGame();
 
 function getSelectedMonsterCount()
 {
@@ -152,17 +170,6 @@ function makeGroupRect(daCondWrapper, monWrappers)
     return daRect;
 }
 
-for (const mon of shuffle([...daGame.daMonsters]))
-// for (const mon of daGame.daMonsters)
-{
-    const myRect = makeMonsterRect(mon);
-    monsterRectsDiv.appendChild(myRect);
-}
-
-document.getElementById("loading").classList.add("gone");
-
-const mistakesCounter = document.getElementById("mistakesCounter");
-
 submitButton.addEventListener("click", () =>
 {
     if (freezeInputs) return;
@@ -231,6 +238,7 @@ submitButton.addEventListener("click", () =>
                 if (daGame.daConditionals.filter(wrapper => wrapper.isSubmitted).length == GROUPS)
                 {
                     document.getElementById("success").classList.remove("gone");
+                    restartButton.classList.remove("disabled");
                 }
             }, 900 + ((MONSTERS_IN_GROUP + 4) * 60));
         }
@@ -238,7 +246,7 @@ submitButton.addEventListener("click", () =>
         {
             mistakes++;
             mistakesCounter.textContent = mistakes;
-            
+
             for (const wrapper of selectedMonsters)
             {
                 wrapper.daRect.classList.add("wrongy");
@@ -302,4 +310,11 @@ shuffleButton.addEventListener("click", () =>
             monsterRectsDiv.appendChild(child);
         }
     });
+});
+
+restartButton.addEventListener("click", () =>
+{
+    // if (daGame.daConditionals.filter(wrapper => wrapper.isSubmitted).length < GROUPS) return;
+
+    loadNewGame();
 });
