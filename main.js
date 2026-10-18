@@ -1,6 +1,5 @@
 import { shuffle, createConnections, GROUPS, MONSTERS_IN_GROUP } from "./createConnections.js";
 
-const MISTAKES_COUNT = 4;
 let mistakes = 0;
 
 let daGame = null;
@@ -162,6 +161,8 @@ for (const mon of shuffle([...daGame.daMonsters]))
 
 document.getElementById("loading").classList.add("gone");
 
+const mistakesCounter = document.getElementById("mistakesCounter");
+
 submitButton.addEventListener("click", () =>
 {
     if (freezeInputs) return;
@@ -235,14 +236,19 @@ submitButton.addEventListener("click", () =>
         }
         else
         {
+            mistakes++;
+            mistakesCounter.textContent = mistakes;
+            
             for (const wrapper of selectedMonsters)
             {
                 wrapper.daRect.classList.add("wrongy");
+                mistakesCounter.classList.add("wrongy");
 
                 setTimeout(() =>
                 {
                     wrapper.daRect.classList.remove("wrongy");
-                }, 1500)
+                    mistakesCounter.classList.remove("wrongy");
+                }, 1500);
             }
         }
     }
@@ -255,7 +261,7 @@ submitButton.addEventListener("click", () =>
             setTimeout(() =>
             {
                 wrapper.daRect.classList.remove("wrongy");
-            }, 1500)
+            }, 1500);
         }
     }
 });
