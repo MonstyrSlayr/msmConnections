@@ -1,7 +1,7 @@
 import { Monster, getClasses, getRarities, getMonsters, getElements, getIslands, getActs } from "https://monstyrslayr.github.io/msmTools/monsters.js";
 
 const RARITY = getRarities();
-const CLASS = getClasses();
+const MCLASS = getClasses();
 const islands = getIslands();
 const acts = getActs();
 const elementSigils = getElements();
@@ -33,25 +33,6 @@ class Conditional // different from the random monster generator one :)
     }
 }
 
-class ClassConditional extends Conditional // c
-{
-    mclasses = []; // can have multiple
-    name = ""
-    weight = 0.075;
-
-    constructor (mclasses = Array, name, description)
-    {
-        let allString = "";
-        mclasses.forEach(mclass =>
-        {
-            allString += mclass;
-        });
-        super(function (monster = Monster) { return mclasses.includes(monster.class) }, description, "c" + allString, name + " class", "Not " + name + " class");
-        this.name = name;
-        this.mclasses = mclasses;
-    }
-}
-
 class IslandConditional extends Conditional // i
 {
     island;
@@ -64,7 +45,7 @@ class IslandConditional extends Conditional // i
     }
 }
 
-class AppearencesConditional extends Conditional // p
+class AppearancesConditional extends Conditional // p
 {
     numAppearances;
     weight = 0.12;
@@ -226,6 +207,74 @@ class ReleaseYearConditional extends Conditional // y
     }
 }
 
+class LetterCountConditional extends Conditional // r
+{
+    letterCount;
+    weight = 0.1;
+
+    constructor(letterCount)
+    {
+        super(function (monster = Monster) { return monster.name.length == letterCount; }, "This monster has " + letterCount + " characters in their name.", "r" + letterCount, "Exactly " + letterCount + " CHARACTERS IN NAME (including spaces)", "Not exactly " + letterCount + " CHARACTERS IN NAME (including spaces)")
+        this.letterCount = letterCount;
+    }
+}
+
+class RegexConditional extends Conditional // x
+{
+    regex;
+    weight = 0.1;
+
+    constructor(regex)
+    {
+        super(function (monster = Monster) { return regex.test(monster.name); }, "This monster's name matches " + regex, "x" + regex, "MATCHES " + regex, "DOES NOT MATCH " + regex)
+        this.regex = regex;
+    }
+}
+
+class DoubleLetterConditional extends RegexConditional // d
+{
+    regex;
+    weight = 0.1;
+
+    constructor(doubleLetter)
+    {
+        super(doubleLetter);
+
+        this.id = "d" + doubleLetter.source;
+        this.description = "This monster has \"" + doubleLetter.source + "\" in their name.";
+        this.label = "NAME INCLUDES \"" + doubleLetter.source + "\"";
+        this.inverseLabel = "NAME DOES NOT INCLUDE \"" + doubleLetter.source + "\"";
+    }
+}
+
+class NonAlphaNumericConditional extends RegexConditional // n
+{
+    regex;
+    weight = 0.1;
+
+    constructor(regex, characterName)
+    {
+        super(regex);
+
+        this.id = "n" + regex.source.replace("\\", "");
+        this.description = "This monster has " + characterName + " (" + regex.source.replace("\\", "") + ") in their name.";
+        this.label = "NAME INCLUDES " + characterName + " (" + regex.source.replace("\\", "") + ")";
+        this.inverseLabel = "NAME DOES NOT INCLUDE " + characterName + " (" +regex.source.replace("\\", "") + ")";
+    }
+}
+
+class SubsetConditional extends Conditional // s
+{
+    ids;
+    weight = 0.7;
+
+    constructor(ids, subsetName)
+    {
+        super(function (monster = Monster) { return ids.includes(monster.id) }, "This monster is " + subsetName, "s" + subsetName, subsetName, "NOT " + subsetName)
+        this.ids = ids;
+    }
+}
+
 export const monsters = await getMonsters();
 // export const defaultConditional = new Conditional(function (monster = Monster) {return true;}, "This monster is a MONSTER. This monster is a singing monster in My Singing Monsters.", "d", "Is a MONSTER", "Is not a MONSTER");
 
@@ -289,23 +338,66 @@ function getMonsterByName(name)
     return monsters.find((monster) => name == monster.name);
 }
 
-// export const classConditionals = [];
-// classConditionals.push(new ClassConditional([CLASS.NATURAL], "NATURAL", "This monster is NATURAL. This monster only has Natural elements, excluding Fire."));
-// classConditionals.push(new ClassConditional([CLASS.FIRE], "FIRE", "This monster is a FIRE NATURAL. This monster only has Natural elements, as well as Fire."));
-// classConditionals.push(new ClassConditional([CLASS.MAGICAL], "MAGICAL", "This monster is MAGICAL. This monster has at least one Magical element."));
-// classConditionals.push(new ClassConditional([CLASS.MYTHICAL], "MYTHICAL", "This monster is MYTHICAL. This monster has the Mythical element, and does not have the Dream element."));
-// classConditionals.push(new ClassConditional([CLASS.DREAMYTHICAL], "DREAMYTHICAL", "This monster is DREAMYTHICAL. This monster has the Dream element."));
-// classConditionals.push(new ClassConditional([CLASS.SEASONAL], "SEASONAL", "This monster is SEASONAL. This monster has a Seasonal element."));
-// classConditionals.push(new ClassConditional([CLASS.ETHEREAL], "ETHEREAL", "This monster is ETHEREAL. This monster has at leasT one Ethereal element."));
-// classConditionals.push(new ClassConditional([CLASS.SUPERNATURAL], "SUPERNATURAL", "This monster is SUPERNATURAL. This monster has the Electricity element."));
-// classConditionals.push(new ClassConditional([CLASS.SHUGAFAM, CLASS.WERDO, CLASS.LEGENDARY], "LEGENDARY", "This monster is LEGENDARY. This monster has the Legendary element."));
-// classConditionals.push(new ClassConditional([CLASS.SHUGAFAM], "SHUGAFAM", "This monster is a SHUGAFAM member. This monster is part of the legendary SHUGAFAM."));
-// classConditionals.push(new ClassConditional([CLASS.WERDO], "WERDO", "This monster is a WERDO. This monster is a loquacious and legendary WERDO."));
-// classConditionals.push(new ClassConditional([CLASS.CELESTIAL], "CELESTIAL", "This monster is a CELESTIAL. This monster has the Celestial element."));
-// classConditionals.push(new ClassConditional([CLASS.DIPSTER], "DIPSTER", "This monster is a DIPSTER. This monster has the Dipster element."));
-// classConditionals.push(new ClassConditional([CLASS.TITANSOUL], "TITANSOUL", "This monster is a TITANSOUL. This monster has the Titansoul element."));
-// classConditionals.push(new ClassConditional([CLASS.PAIRONORMAL], "PAIRONORMAL", "This monster is PAIRONORMAL. This monster has at least one Paironormal element."));
-// classConditionals.push(new ClassConditional([CLASS.PRIMORDIAL], "PRIMORDIAL", "This monster is PRIMORDIAL. This monster has at least one Primordial element."));
+new SubsetConditional(
+    monsters.filter(mon => mon.acts.size > 0).map(mon => mon.id), "IN ANY ACT"
+);
+
+new SubsetConditional(
+    [
+        "z09", "bcde", "be", "e", "ace", "gl", "d", "a",
+        "bcde_rare", "be_rare", "e_rare", "ace_rare", "gl_rare", "d_rare", "a_rare"
+    ],
+    "PLAYABLE IN MSM KARAOKE"
+);
+
+new SubsetConditional(
+    [
+        "be", "ae", "ade", "ace", "e", "bcde", "n"
+    ],
+    "PLAYABLE IN MSM PLAYGROUND"
+);
+
+new SubsetConditional(
+    [
+        ...["gjklm", "i05_maj", "i05_min", "VOC_05", "VOC_06"],
+        ...monsters.filter(mon => [MCLASS.SHUGAFAM, MCLASS.BBSQUAD, MCLASS.LEGENDARY].includes(mon.class)).map(mon => mon.id)
+    ],
+    "COLLABORATION MONSTER"
+);
+
+const lowercaseCond = new RegexConditional(/^[a-z]/);
+lowercaseCond.id = "xlowercase";
+lowercaseCond.description = "This monster's name begins with a lowercase letter.";
+lowercaseCond.label = "NAME BEGINS WITH LOWERCASE LETTER";
+lowercaseCond.inverseLabel = "NAME DOES NOT BEGIN WITH LOWERCASE LETTER";
+
+const bookendsCond = new RegexConditional(/^(.).*\1$/);
+bookendsCond.id = "xbookends";
+bookendsCond.description = "This monster's name begins and ends with the same letter.";
+bookendsCond.label = "NAME BEGINS AND ENDS WITH SAME LETTER";
+bookendsCond.inverseLabel = "NAME DOES NOT BEGIN AND END WITH SAME LETTER";
+
+const fullDoubleLetter = new DoubleLetterConditional(/([a-zA-Z])\1/);
+fullDoubleLetter.id = "d";
+fullDoubleLetter.description = "This monster has a double letter in their name.";
+fullDoubleLetter.label = "NAME CONTAINS DOUBLE LETTER";
+fullDoubleLetter.inverseLabel = "NAME DOES NOT CONTAIN DOUBLE LETTER";
+
+for (const doubleLetter of [/aa/, /bb/, /dd/, /ee/, /gg/, /ii/, /ll/, /mm/, /oo/, /rr/, /uu/])
+{
+    new DoubleLetterConditional(doubleLetter);
+}
+
+const fullNonAlpha = new NonAlphaNumericConditional(/[^a-zA-Z0-9 ()]/, "");
+fullNonAlpha.id = "n";
+fullNonAlpha.description = "This monster has a non-alphanumeric character in their name.";
+fullNonAlpha.label = "NAME CONTAINS NON-ALPHANUMERIC CHARACTER";
+fullNonAlpha.inverseLabel = "NAME DOES NOT CONTAIN NON-ALPHANUMERIC CHARACTER";
+
+for (const nonAlpha of [[/'/, "APOSTROPHE"], [/\$/, "DOLLAR SIGN"], [/-/, "EN DASH"]])
+{
+    new NonAlphaNumericConditional(nonAlpha[0], nonAlpha[1]);
+}
 
 export const islandConditionals = [];
 islands.forEach(island =>
@@ -325,7 +417,7 @@ elementSigils.forEach(elementSigil =>
     elementConditionals.push(new ElementConditional(elementSigil));
 });
 
-export const appearencesConditionals = [];
+export const appearancesConditionals = [];
 export const likeConditionals = [];
 export const likedByConditionals = [];
 export const eggConditionals = [];
@@ -334,6 +426,7 @@ export const levelConditionals = [];
 export const timeConditionals = [];
 export const firstConditionals = [];
 export const yearConditionals = [];
+export const letterCountConditionals = [];
 
 const uniqueAppearances = new Set();
 const uniqueCounts = new Set();
@@ -347,10 +440,12 @@ const uniqueLevels = new Set();
 const uniqueTimes = new Set();
 const uniqueFirsts = new Set();
 const uniqueYears = new Set();
+const uniqueLetterCounts = new Set();
 
 monsters.forEach(monster =>
 {
     uniqueAppearances.add(monster.islands.size);
+    uniqueLetterCounts.add(monster.name.length);
 
     monster.likes.values().forEach(likeObj =>
     {
@@ -382,9 +477,9 @@ monsters.forEach(monster =>
 
 uniqueAppearances.values().forEach(numAppearances =>
 {
-    appearencesConditionals.push(new AppearencesConditional(numAppearances));
+    appearancesConditionals.push(new AppearancesConditional(numAppearances));
 });
-appearencesConditionals.sort((a, b) => a.numAppearances - b.numAppearances);
+appearancesConditionals.sort((a, b) => a.numAppearances - b.numAppearances);
 
 uniqueLikes.values().forEach(like =>
 {
@@ -434,6 +529,12 @@ uniqueYears.values().forEach(year =>
 });
 yearConditionals.sort((a, b) => a.year - b.year);
 
+uniqueLetterCounts.values().forEach(letterCount =>
+{
+    letterCountConditionals.push(new LetterCountConditional(letterCount));
+});
+letterCountConditionals.sort((a, b) => a.letterCount - b.letterCount);
+
 export function getConditionalById(id)
 {
     // error handling
@@ -446,7 +547,7 @@ export function getConditionalById(id)
             return conditional;
         }
     }
-    return defaultConditional;
+    return null;
 }
 
 const secretKey = "whatTheDogDoin";
