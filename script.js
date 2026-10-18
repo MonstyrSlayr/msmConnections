@@ -67,11 +67,11 @@ class IslandConditional extends Conditional // i
 class AppearencesConditional extends Conditional // p
 {
     numAppearances;
-    weight = 0.09;
+    weight = 0.12;
 
     constructor (numAppearances)
     {
-        super(function (monster = Monster) { return monster.islands.size == numAppearances }, "This monster is on " + numAppearances + " islands.", "p" + numAppearances, "Is on " + numAppearances + " islands", "Is not on " + numAppearances + " islands");
+        super(function (monster = Monster) { return monster.islands.size == this.numAppearances }, "This monster is on " + numAppearances + " islands.", "p" + numAppearances, "Is on " + numAppearances + " islands", "Is not on " + numAppearances + " islands");
         this.numAppearances = numAppearances;
     }
 }
@@ -335,7 +335,7 @@ export const timeConditionals = [];
 export const firstConditionals = [];
 export const yearConditionals = [];
 
-const uniqueAppearences = new Set();
+const uniqueAppearances = new Set();
 const uniqueCounts = new Set();
 const uniqueLikes = new Set();
 const uniqueMonsterLikes = new Set();
@@ -350,7 +350,7 @@ const uniqueYears = new Set();
 
 monsters.forEach(monster =>
 {
-    uniqueAppearences.add(monster.islands.size);
+    uniqueAppearances.add(monster.islands.size);
 
     monster.likes.values().forEach(likeObj =>
     {
@@ -380,7 +380,7 @@ monsters.forEach(monster =>
     if (monster.firstDiscovered != "") uniqueFirsts.add(monster.firstDiscovered);
 });
 
-uniqueAppearences.values().forEach(numAppearances =>
+uniqueAppearances.values().forEach(numAppearances =>
 {
     appearencesConditionals.push(new AppearencesConditional(numAppearances));
 });

@@ -204,7 +204,7 @@ export function createConnections(debug = false)
         // const thingyMin = SPECIFICITY_CURVE(i / GROUPS) * allConditionalWrappers.length;
         const thingyMin = 0;
         const thingyMax = (SPECIFICITY_CURVE((i + 1) / GROUPS) * allConditionalWrappers.length) - 1;
-        const thingy = Math.floor(Math.random() * (thingyMax - thingyMin) + thingyMin);
+        const thingy = Math.max(Math.floor(Math.random() * (thingyMax - thingyMin) + thingyMin), 0);
         const myWrapper = allConditionalWrappers[thingy];
 
         connectionsGroups.push(myWrapper.conditional);
