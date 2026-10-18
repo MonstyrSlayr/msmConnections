@@ -314,7 +314,7 @@ shuffleButton.addEventListener("click", () =>
 
 restartButton.addEventListener("click", () =>
 {
-    // if (daGame.daConditionals.filter(wrapper => wrapper.isSubmitted).length < GROUPS) return;
+    if (daGame.daConditionals.filter(wrapper => wrapper.isSubmitted).length < GROUPS) return;
 
     loadNewGame();
 });
